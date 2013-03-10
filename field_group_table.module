@@ -112,14 +112,13 @@ function field_group_table_field_group_pre_render(&$element, $group, &$form) {
 
       foreach (element_children($element) as $k) {
         // Grab rendered version first.
-        $rendered = theme('field', $element[$k]);
+        
+        $rendered = theme($element[$k]['#theme'], $element[$k]);
         // Don't render this via the standard field template.
         unset($element[$k]['#theme']);
 
         $variables = array('element' => $element[$k]);
         $variables['field_group']['format_settings']['instance_settings'] = $group->format_settings['instance_settings'];
-        template_preprocess_field($variables, 'field_group_table_row');
-        template_process_field($variables, 'field_group_table_row');
         $variables['rendered'] = $rendered;
         $output = _field_group_table_row_render($variables);
         $add = array(
@@ -156,13 +155,13 @@ function field_group_table_field_group_pre_render(&$element, $group, &$form) {
  */
 function _field_group_table_row_render($variables) {
 
-  $output = '<th class="field-label"' . $variables['title_attributes'] . '>' . $variables['element']['#title'] . '</th>';
+  $output = '<th class="field-label">' . $variables['element']['#title'] . '</th>';
 
   // Render the items.
-  $output .= '<td class="field-items"' . $variables['content_attributes'] . '>' . $variables['rendered'] . '</td>';
+  $output .= '<td class="field-items">' . $variables['rendered'] . '</td>';
 
   // Render the top-level DIV.
-  $output = '<tr class="' . $variables['classes'] . '"' . $variables['attributes'] . '>' . $output . '</tr>';
+  $output = '<tr>' . $output . '</tr>';
 
   return $output;
 }
